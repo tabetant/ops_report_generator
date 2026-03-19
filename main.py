@@ -17,7 +17,7 @@ def generate(
     file_path: str = typer.Argument(..., help="Path to a CSV or Excel (.xlsx) file"),
     mock: bool = typer.Option(True, "--mock/--no-mock", help="Use mock Claude response (default: True)"),
     output_path: str = typer.Option("report.docx", "--output", help="Path for the generated Word report"),
-    model: str = typer.Option("claude-haiku-4-5", "--model", help="Claude model to use for real API calls"),
+    model: str = typer.Option("claude-haiku-4-5-20251001", "--model", help="Claude model to use for real API calls"),
 ):
     """Load operational data, analyze it with Claude, and produce a terminal + Word report."""
 
