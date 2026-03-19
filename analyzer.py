@@ -71,7 +71,7 @@ def call_claude(prompt: str, mock: bool = True) -> dict:
     if mock:
         return MOCK_RESPONSE
 
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
     if not api_key:
         raise EnvironmentError(
             "ANTHROPIC_API_KEY is not set. Add it to your .env file."
