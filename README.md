@@ -1,55 +1,55 @@
 # Operations Report Generator
 
-## What This Does
-
-Every week, operations managers review spreadsheets to find problems — defect spikes, unexpected downtime, shifts that produced nothing. This is slow, error-prone, and depends on whoever happens to have the sharpest eye that day.
-
-This tool reads your operational data file and, in seconds, produces a clear, manager-ready report that highlights what went wrong, how severe it is, and what to do about it next.
+**Drop in a spreadsheet of your factory or operations data. Get a clear, manager-ready report in seconds — no analyst required.**
 
 ---
 
-## Before and After
+## The problem it solves
 
-**Before:** A manager opens a 30-row spreadsheet, scrolls through numbers, tries to spot trends, and writes a summary paragraph from scratch. This takes 20–40 minutes and misses things.
+Right now, turning a week's worth of raw operations data into something a manager can act on takes hours. Someone has to open the spreadsheet, hunt for outliers, calculate defect rates, write up a summary, format it, and email it out. That's time your team doesn't have.
 
-**After:** One command. The tool reads the file, finds the anomalies automatically, and delivers a formatted report — both on screen and as a Word document ready to forward or print. Total time: under 30 seconds.
+This tool does all of it automatically. Feed it your data file. In under 10 seconds, it identifies your key metrics, flags anything that looks wrong, and hands you a Word document (a standard Microsoft Office file) ready to drop into your next operations review.
 
----
+**Before:** A floor supervisor spends 2–3 hours every Monday morning pulling numbers, building a summary table, and writing up the week's issues.
 
-## Real Use Cases
-
-**Manufacturing quality control** — Catch defect spikes before they cascade into product recalls. Know which line, which shift, and which day the problem started.
-
-**Logistics and warehouse operations** — Flag downtime events that exceeded acceptable thresholds. Understand whether idle time was logged or silently lost.
-
-**Shift productivity tracking** — Identify shifts with zero output and no recorded reason. Create accountability before the next reporting cycle.
-
-**Multi-site operations** — Compare performance across lines or locations without manually consolidating data from different teams.
+**After:** They run one command, and a complete, formatted report lands on their desk before their first coffee.
 
 ---
 
-## What You Get
+## What it's built for
 
-When you run the tool against your spreadsheet, you receive two things:
+**Manufacturing floor reviews** — Track units produced, defect counts, and downtime across shifts and production lines. Spot which line had a bad week before the meeting starts.
 
-**1. A live terminal summary** — displayed immediately, showing your key numbers in a color-coded table. Green means normal, yellow means watch it, red means act now. Anomalies are listed with plain-language descriptions. Recommended actions follow.
+**Quality control reporting** — Automatically calculate your defect rate and flag any shifts or days where defects spiked well above normal. Know what to investigate before you walk the floor.
 
-**2. A Word document** — formatted and ready to send. It includes the same KPIs, anomaly flags, and action items in a clean layout that non-technical readers can follow without context.
+**Maintenance and downtime tracking** — Surface your worst downtime events from the week, ranked by severity. No more digging through rows to find the 9-hour stoppage buried on a Tuesday.
+
+**Weekly operations briefings** — Export a clean Word document every week with zero formatting work. Send it to leadership directly, or paste the numbers into your existing report template.
 
 ---
 
-## What the Report Covers
+## What it outputs
 
-- Overall defect rate for the period
-- Average units produced, and how far outlier shifts deviated
-- Downtime events — duration, affected lines, and whether they coincided with production loss
-- Shifts with missing or suspicious data
-- Concrete next steps, written in plain language
+Every run produces two deliverables: a live preview on your screen and a Word document saved to your computer. Both contain the same three sections.
+
+**Key Performance Indicators** — Your most important numbers at a glance: average units produced, defect rate, average downtime per shift, and the worst single event in the period. Each metric is color-coded green, yellow, or red so you know immediately what needs attention.
+
+**Anomalies Detected** — A plain-English list of anything that looks unusual in your data. Not just "defects were high" — specific flags like "Line 2 recorded 150 defects on January 5th, which is 12 times the weekly average." Severity is labeled clearly: WARNING or CRITICAL.
+
+**Recommended Actions** — Concrete next steps written in plain language. Not a generic checklist — actions tied directly to what was actually found in your data, like which line to audit, which maintenance log to pull, and which alert threshold to set going forward.
+
+---
+
+## How it works (without the technical details)
+
+The tool reads your spreadsheet, runs the numbers, and sends a summary to an AI (artificial intelligence — software trained to understand and reason about information) that acts as an experienced operations analyst. The AI reads the summary, identifies what matters, and writes up the findings in plain language. The whole process takes a few seconds.
+
+Your raw data never leaves your machine in full — only a statistical summary (averages, minimums, maximums, row counts) is sent for analysis.
 
 ---
 
 ## Built by Antoine Tabet
 
-Antoine Tabet builds operational intelligence tools for manufacturing, logistics, and field operations teams. His work focuses on turning raw operational data into decisions — without requiring a data team or a dashboard subscription.
+Antoine Tabet is a 2nd-year Electrical and Computer Engineering student at the University of Toronto, building practical AI integration tools for small and medium-sized businesses (SMBs — companies typically between 10 and 500 employees). This project is part of a broader effort to bring the kind of automated reporting that large enterprises pay six figures for down to a price and complexity level that any operations team can actually use.
 
-For inquiries, reach out directly.
+For inquiries: antoine.tabet@mail.utoronto.ca
