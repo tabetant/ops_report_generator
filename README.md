@@ -1,55 +1,83 @@
 # Operations Report Generator
 
-**Drop in a spreadsheet of your factory or operations data. Get a clear, manager-ready report in seconds — no analyst required.**
+> Drop in a CSV or XLSX of factory data. Get a manager-ready Word report with KPIs, anomalies, and recommendations in under 10 seconds. Raw data stays on your machine.
 
----
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
+[![Claude](https://img.shields.io/badge/Claude-Haiku%204.5-D97706?style=flat-square&logo=anthropic&logoColor=white)](https://www.anthropic.com)
+[![Pandas](https://img.shields.io/badge/Pandas-2.1+-150458?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org)
+[![Typer](https://img.shields.io/badge/CLI-Typer-009485?style=flat-square&logo=typer&logoColor=white)](https://typer.tiangolo.com)
+[![python-docx](https://img.shields.io/badge/Output-DOCX-2B579A?style=flat-square&logo=microsoftword&logoColor=white)](https://python-docx.readthedocs.io)
+![Last commit](https://img.shields.io/github/last-commit/tabetant/ops_report_generator?style=flat-square)
 
-## The problem it solves
+## ✨ Features
+- **Spreadsheet in, Word doc out.** Reads CSV or XLSX, writes a formatted `.docx` with KPIs, anomalies, and recommended actions.
+- **Privacy-respecting.** Raw rows never leave your machine. Only aggregate statistics (mean, min, max, totals, defect rate) are sent to Claude.
+- **Schema-validated input.** Requires the columns `date, units_produced, defects, downtime_hours, line_id, shift`. Missing columns fail fast with a clear error.
+- **Mock mode by default.** Develop and demo without burning API credits. Flip `--no-mock` for real Claude calls.
+- **Rich terminal preview + docx.** See the report in your terminal first, then a Word file lands on disk for sharing.
 
-Right now, turning a week's worth of raw operations data into something a manager can act on takes hours. Someone has to open the spreadsheet, hunt for outliers, calculate defect rates, write up a summary, format it, and email it out. That's time your team doesn't have.
+## 🏗 Architecture
 
-This tool does all of it automatically. Feed it your data file. In under 10 seconds, it identifies your key metrics, flags anything that looks wrong, and hands you a Word document (a standard Microsoft Office file) ready to drop into your next operations review.
+```mermaid
+flowchart LR
+    SHEET["CSV / XLSX"] --> LOAD["loader.py (pandas)"]
+    LOAD --> VAL[Validate required columns]
+    VAL --> SUM["loader.summarize: stats only"]
+    SUM -->|aggregates only, never raw rows| CLAUDE[Claude Haiku 4.5]
+    CLAUDE --> AN[Anomalies + Recommendations]
+    SUM --> TERM[Rich terminal report]
+    AN --> TERM
+    SUM --> DOCX[Word .docx]
+    AN --> DOCX
+```
 
-**Before:** A floor supervisor spends 2–3 hours every Monday morning pulling numbers, building a summary table, and writing up the week's issues.
+The privacy boundary matters here. `loader.summarize` reduces the spreadsheet to a dictionary of aggregates before any network call. Whatever's in the rows (employee names, supplier IDs, anything regulated) stays local.
 
-**After:** They run one command, and a complete, formatted report lands on their desk before their first coffee.
+## 🛠 Stack
+- Python 3.10+
+- `pandas` + `openpyxl` for CSV and XLSX I/O
+- `anthropic` SDK, Claude Haiku 4.5 by default
+- `typer` for the CLI, `rich` for terminal output
+- `python-docx` for the Word report
+- `python-dotenv` for `.env` loading
 
----
+## 🚀 Getting started
 
-## What it's built for
+```bash
+git clone https://github.com/tabetant/ops_report_generator.git
+cd ops_report_generator
 
-**Manufacturing floor reviews** — Track units produced, defect counts, and downtime across shifts and production lines. Spot which line had a bad week before the meeting starts.
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-**Quality control reporting** — Automatically calculate your defect rate and flag any shifts or days where defects spiked well above normal. Know what to investigate before you walk the floor.
+# Optional: set your Claude key for non-mock runs
+echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
 
-**Maintenance and downtime tracking** — Surface your worst downtime events from the week, ranked by severity. No more digging through rows to find the 9-hour stoppage buried on a Tuesday.
+# Mock run (default, no API call)
+python main.py samples/factory_week.csv
 
-**Weekly operations briefings** — Export a clean Word document every week with zero formatting work. Send it to leadership directly, or paste the numbers into your existing report template.
+# Real Claude call, custom output path
+python main.py samples/factory_week.csv --no-mock --output reports/week-12.docx
+```
 
----
+Required columns in your file: `date`, `units_produced`, `defects`, `downtime_hours`, `line_id`, `shift`.
 
-## What it outputs
+## 📁 Module layout
 
-Every run produces two deliverables: a live preview on your screen and a Word document saved to your computer. Both contain the same three sections.
+```
+loader.py     # Load CSV/XLSX, validate schema, compute summary stats
+analyzer.py   # Build prompt, call Claude (or mock), return anomalies + actions
+output.py     # Rich terminal panels, python-docx Word writer
+main.py       # Typer CLI entry point
+samples/      # Example data files
+```
 
-**Key Performance Indicators** — Your most important numbers at a glance: average units produced, defect rate, average downtime per shift, and the worst single event in the period. Each metric is color-coded green, yellow, or red so you know immediately what needs attention.
+## 📸 Demo
 
-**Anomalies Detected** — A plain-English list of anything that looks unusual in your data. Not just "defects were high" — specific flags like "Line 2 recorded 150 defects on January 5th, which is 12 times the weekly average." Severity is labeled clearly: WARNING or CRITICAL.
+Sample report `.docx`: TBD.
 
-**Recommended Actions** — Concrete next steps written in plain language. Not a generic checklist — actions tied directly to what was actually found in your data, like which line to audit, which maintenance log to pull, and which alert threshold to set going forward.
+## 👤 Author
 
----
-
-## How it works (without the technical details)
-
-The tool reads your spreadsheet, runs the numbers, and sends a summary to an AI (artificial intelligence — software trained to understand and reason about information) that acts as an experienced operations analyst. The AI reads the summary, identifies what matters, and writes up the findings in plain language. The whole process takes a few seconds.
-
-Your raw data never leaves your machine in full — only a statistical summary (averages, minimums, maximums, row counts) is sent for analysis.
-
----
-
-## Built by Antoine Tabet
-
-Antoine Tabet is a 2nd-year Electrical and Computer Engineering student at the University of Toronto, building practical AI integration tools for small and medium-sized businesses (SMBs — companies typically between 10 and 500 employees). This project is part of a broader effort to bring the kind of automated reporting that large enterprises pay six figures for down to a price and complexity level that any operations team can actually use.
-
-For inquiries: antoine.tabet@mail.utoronto.ca
+**Antoine Tabet**, UofT Computer Engineering
+[LinkedIn](https://linkedin.com/in/antoinetabetuoft) · [antoine.tabet@mail.utoronto.ca](mailto:antoine.tabet@mail.utoronto.ca) · [GitHub](https://github.com/tabetant)
